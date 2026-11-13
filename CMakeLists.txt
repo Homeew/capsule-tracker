@@ -18,9 +18,13 @@ FetchContent_Declare(Catch2
     GIT_TAG        v2.13.10)
 FetchContent_MakeAvailable(Eigen Catch2)
 
+add_library(tracker_lib
+    src/trajectory.cpp)
+target_include_directories(tracker_lib PUBLIC include ${eigen_SOURCE_DIR})
+target_compile_options(tracker_lib PRIVATE -Wall -Wextra -Wpedantic)
+
 enable_testing()
 add_executable(tests tests/test_tracker.cpp)
-target_include_directories(tests PRIVATE include ${eigen_SOURCE_DIR})
 target_compile_options(tests PRIVATE -Wall -Wextra -Wpedantic)
-target_link_libraries(tests PRIVATE Catch2::Catch2)
+target_link_libraries(tests PRIVATE tracker_lib Catch2::Catch2)
 add_test(NAME tracker_tests COMMAND tests)
