@@ -24,7 +24,7 @@ which covers the static, single-frame problem.
 - [x] Dipole field model with analytical Jacobian (position and moment)
 - [x] Two-layer ring magnetometer array (8 three-axis sensors, rings 30 cm apart)
 - [x] Simulated GI trajectory with pulsating, peristalsis-like speed
-- [ ] Frame-by-frame Levenberg-Marquardt baseline
+- [x] Frame-by-frame Levenberg-Marquardt baseline
 - [ ] Extended Kalman filter
 - [ ] Unscented Kalman filter
 - [ ] Noise-sweep benchmark and plots
@@ -77,8 +77,10 @@ sensor geometry, and the physical consistency of the trajectory.
       dipole_model.hpp   - dipole field and analytical Jacobian
       sensor_array.hpp   - two-layer ring array and stacked measurements
       trajectory.hpp     - simulated GI trajectory
+      lm_baseline.hpp    - frame-by-frame Levenberg-Marquardt solver
     src/
       trajectory.cpp
+      lm_baseline.cpp
     tests/
       test_tracker.cpp   - Catch2 unit tests
 

@@ -19,7 +19,8 @@ FetchContent_Declare(Catch2
 FetchContent_MakeAvailable(Eigen Catch2)
 
 add_library(tracker_lib
-    src/trajectory.cpp)
+    src/trajectory.cpp
+    src/lm_baseline.cpp)
 target_include_directories(tracker_lib PUBLIC include ${eigen_SOURCE_DIR})
 target_compile_options(tracker_lib PRIVATE -Wall -Wextra -Wpedantic)
 

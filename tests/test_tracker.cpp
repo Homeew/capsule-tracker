@@ -3,6 +3,7 @@
 #include "dipole_model.hpp"
 #include "sensor_array.hpp"
 #include "trajectory.hpp"
+#include "lm_baseline.hpp"
 
 using mag::Vec3;
 using mag::Mat3;
@@ -80,5 +81,39 @@ TEST_CASE("Trajectory is smooth and physically consistent", "[trajectory]") {
         REQUIRE(s.moment.norm() == Approx(0.2));
         REQUIRE(s.moment.cross(s.velocity).norm() < 1e-12);
         REQUIRE(s.moment.dot(s.velocity) > 0.0);
+    }
+}
+
+TEST_CASE("LM recovers a static dipole from noiseless data", "[lm]") {
+    const mag::SensorArray sensors = mag::twoLayerRing();
+    const Vec3 pTrue(0.02, -0.01, 0.03);
+    const Vec3 mTrue = 0.2 * Vec3(0.3, 0.4, 0.866).normalized();
+    const Eigen::VectorXd z = mag::measure(sensors, pTrue, mTrue);
+
+    const mag::LmBaseline lm(sensors);
+    const mag::LmResult res =
+        lm.solve(z, pTrue + Vec3(0.01, -0.01, 0.01), Vec3(0.0, 0.0, 0.2));
+
+    REQUIRE(res.converged);
+    REQUIRE((res.position - pTrue).norm() < 1e-6);   // under 1 µm
+    REQUIRE((res.moment - mTrue).norm() < 1e-6);
+}
+
+TEST_CASE("Warm-started LM tracks the trajectory without noise", "[lm]") {
+    const mag::SensorArray sensors = mag::twoLayerRing();
+    const mag::GiTrajectory traj(0.2);
+    const mag::LmBaseline lm(sensors);
+
+    mag::CapsuleState s0 = traj.at(0.0);
+    Vec3 p = s0.position + Vec3(0.005, 0.005, -0.005);
+    Vec3 m = s0.moment;
+    for (double t = 0.0; t <= 30.0; t += 0.5) {
+        const mag::CapsuleState s = traj.at(t);
+        const mag::LmResult res =
+            lm.solve(mag::measure(sensors, s.position, s.moment), p, m);
+        REQUIRE(res.converged);
+        REQUIRE((res.position - s.position).norm() < 1e-6);
+        p = res.position;    // warm start the next frame
+        m = res.moment;
     }
 }
