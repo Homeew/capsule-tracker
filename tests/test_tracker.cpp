@@ -40,11 +40,11 @@ TEST_CASE("Analytical Jacobian matches finite differences", "[dipole]") {
 }
 
 TEST_CASE("Two-layer ring has the expected geometry", "[sensors]") {
-    const mag::SensorArray sensors = mag::twoLayerRing(8, 0.15, -0.05, 0.05);
-    REQUIRE(sensors.size() == 16);
+    const mag::SensorArray sensors = mag::twoLayerRing(4, 0.15, -0.15, 0.15);
+    REQUIRE(sensors.size() == 8);
     for (const Vec3& s : sensors) {
         REQUIRE(std::hypot(s.x(), s.y()) == Approx(0.15));
-        REQUIRE(std::abs(s.z()) == Approx(0.05));
+        REQUIRE(std::abs(s.z()) == Approx(0.15));
     }
 }
 
@@ -53,7 +53,7 @@ TEST_CASE("Stacked measurement matches the per-sensor field", "[sensors]") {
     const Vec3 p(0.01, -0.02, 0.0);
     const Vec3 m(0.0, 0.1, 0.17);
     const Eigen::VectorXd z = mag::measure(sensors, p, m);
-    REQUIRE(z.size() == 48);
+    REQUIRE(z.size() == 24);
     const Vec3 B5 = mag::dipoleField(sensors[5], p, m);
     for (int i = 0; i < 3; ++i)
         REQUIRE(z[15 + i] == Approx(B5[i]));

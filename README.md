@@ -22,7 +22,7 @@ which covers the static, single-frame problem.
 ## Status
 
 - [x] Dipole field model with analytical Jacobian (position and moment)
-- [x] Two-layer ring magnetometer array (16 three-axis sensors)
+- [x] Two-layer ring magnetometer array (8 three-axis sensors, rings 30 cm apart)
 - [x] Simulated GI trajectory with pulsating, peristalsis-like speed
 - [ ] Frame-by-frame Levenberg-Marquardt baseline
 - [ ] Extended Kalman filter
@@ -47,7 +47,7 @@ covariances well conditioned.
 
 | Parameter | Value |
 |-----------|-------|
-| Sensors | 16, two interleaved rings, radius 0.15 m, z = ±0.05 m |
+| Sensors | 8, two rings of 4, radius 0.15 m, 30 cm apart (z = ±0.15 m) |
 | Magnet moment | 0.2 A·m², aligned with the direction of travel |
 | Capsule speed | about 2 to 21 mm/s |
 | Workspace | within 0.10 m of the array centre |

@@ -10,9 +10,10 @@ constexpr double kPi = 3.14159265358979323846;
 using SensorArray = std::vector<Vec3>;
 
 /// Two rings of sensors around the z axis (a wearable belt layout).
+/// Default: 4 sensors per ring, radius 0.15 m, rings 0.30 m apart.
 /// The upper ring is rotated by half a step so the rings interleave.
-inline SensorArray twoLayerRing(int perRing = 8, double radius = 0.15,
-                                double zLower = -0.05, double zUpper = 0.05) {
+inline SensorArray twoLayerRing(int perRing = 4, double radius = 0.15,
+                                double zLower = -0.15, double zUpper = 0.15) {
     SensorArray sensors;
     sensors.reserve(2 * perRing);
     const double step = 2.0 * kPi / perRing;
